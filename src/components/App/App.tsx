@@ -29,11 +29,12 @@ function App() {
       </header>
       {isLoading && <p>Loading tasks...</p>}
       {isError && <p>Error...</p>}
-      {data && data.length > 0 ? <TasksList tasks={data} /> : <p>No Tasks</p>}
+      {data && (data.length > 0 ? <TasksList tasks={data} /> : <p>No Tasks</p>)}
+      {/* {data && <TasksList tasks={data} />} */}
 
       {isModalOpen && (
         <Modal onClose={closeModal}>
-          <TaskForm />
+          <TaskForm onClose={closeModal} />
         </Modal>
       )}
     </div>

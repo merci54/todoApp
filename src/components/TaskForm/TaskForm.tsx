@@ -4,6 +4,10 @@ import { postTask } from '../../services/taskService';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
+interface TaskFormProps {
+  onClose: () => void;
+}
+
 interface formValues {
   text: string;
 }
@@ -19,10 +23,10 @@ const textSchema = Yup.object().shape({
     .required('Required!'),
 });
 
-export default function TaskForm() {
+export default function TaskForm({ onClose }: TaskFormProps) {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: postTask,
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -31,6 +35,7 @@ export default function TaskForm() {
 
   const handleSubmit = (values: formValues) => {
     mutate({ title: values.text });
+    onClose();
   };
 
   return (
@@ -52,7 +57,7 @@ export default function TaskForm() {
         <ErrorMessage name="text" component="span" className={css.error} />
 
         <button type="submit" className={css.button}>
-          Create
+          {isPending ? 'Creating...' : 'Create'}
         </button>
       </Form>
     </Formik>
